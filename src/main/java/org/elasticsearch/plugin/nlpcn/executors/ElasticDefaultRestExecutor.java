@@ -49,9 +49,14 @@ public class ElasticDefaultRestExecutor implements RestExecutor {
             sendDefaultResponse(executor.getHits(), channel);
         } else if (request instanceof SearchRequest) {
             //支持preference参数
-            if(params.get("preference").trim().length()>0)
+            String preference = params.get("preference");
+            if (preference!=null && preference.length()>0)
             {
-                ((SearchRequest) request).preference(params.get("preference"));
+                preference = preference.trim();
+                if(preference.length()>0)
+                {
+                    ((SearchRequest) request).preference(preference);
+                }
             }
             client.search((SearchRequest) request, new RestStatusToXContentListener<>(channel));
         } else if (request instanceof DeleteByQueryRequest) {
