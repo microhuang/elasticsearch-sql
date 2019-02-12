@@ -12,6 +12,8 @@ import org.nlpcn.es4sql.query.QueryAction;
 import java.io.IOException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RestSqlAction extends BaseRestHandler {
@@ -60,10 +62,20 @@ public class RestSqlAction extends BaseRestHandler {
             if (preference!=null && preference.length()>0)
             {
                 preference = preference.trim();
-                if (preference.trim().length()>0)
+                
+            }
+            else
+            {
+                Pattern r = Pattern.compile("/\\*! PREFERENCE\\((.*)\\) \\*/", Pattern.CASE_INSENSITIVE);
+                Matcher m = r.matcher(sql);
+                if (m.find())
                 {
-                    additionalParams.put("preference", preference);
+                    preference = m.group(1).trim();
                 }
+            }
+            if (preference!=null && preference.length()>0)
+            {
+                additionalParams.put("preference", preference);
             }
             return channel -> restExecutor.execute(client,additionalParams, finalQueryAction,channel);
         }
