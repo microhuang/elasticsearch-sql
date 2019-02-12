@@ -518,7 +518,8 @@ public class AggMaker {
                     case "extended_bounds":
                         String[] bounds = value.split(":");
                         if (bounds.length == 2) {
-                            dateHistogram.extendedBounds(new ExtendedBounds(bounds[0], bounds[1]));
+//                            dateHistogram.extendedBounds(new ExtendedBounds(bounds[0], bounds[1]));
+                            dateHistogram.extendedBounds(new ExtendedBounds(Long.parseLong(bounds[0]), Long.parseLong(bounds[1])));
                         }
                         break;
 
