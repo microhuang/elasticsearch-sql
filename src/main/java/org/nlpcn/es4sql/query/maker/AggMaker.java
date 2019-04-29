@@ -515,22 +515,11 @@ public class AggMaker {
                         dateHistogram.order("desc".equalsIgnoreCase(value) ? BucketOrder.key(false) : BucketOrder.key(true));
                         break;
                     case "extended_bounds":
-                        ExtendedBounds extendedBounds = null;
-                        try (JsonXContentParser parser = new JsonXContentParser(NamedXContentRegistry.EMPTY, LoggingDeprecationHandler.INSTANCE, new JsonFactory().createParser(value))) {
-                            extendedBounds = ExtendedBounds.PARSER.parse(parser, null);
-                        } catch (IOException ex) {
-                            List<Integer> indexList = new LinkedList<>();
-                            int index = -1;
-                            while ((index = value.indexOf(':', index + 1)) != -1) {
-                                indexList.add(index);
-                            }
-                            if (!indexList.isEmpty()) {
-                                index = indexList.get(indexList.size() / 2);
-                                extendedBounds = new ExtendedBounds(value.substring(0, index), value.substring(index + 1));
-                            }
-                        }
-                        if (extendedBounds != null) {
-                            dateHistogram.extendedBounds(extendedBounds);
+                        String[] bounds = value.split(":");
+                        if (bounds.length == 2) {
+                            //TODO:毫秒时间戳错误
+//                        dateHistogram.extendedBounds(new ExtendedBounds(bounds[0], bounds[1]));
+                            dateHistogram.extendedBounds(new ExtendedBounds(Long.parseLong(bounds[0]), Long.parseLong(bounds[1])));
                         }
                         break;
 
