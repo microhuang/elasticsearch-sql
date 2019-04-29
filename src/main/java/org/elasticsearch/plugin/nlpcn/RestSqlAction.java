@@ -60,6 +60,16 @@ public class RestSqlAction extends BaseRestHandler {
                     additionalParams.put(paramName, request.param(paramName));
                 }
             }
+            //支持preference参数
+            String preference = request.param("preference");
+            if (preference!=null && preference.length()>0)
+            {
+                preference = preference.trim();
+                if (preference.length()>0)
+                {
+                    additionalParams.put("preference", preference);
+                }
+            }
             return channel -> restExecutor.execute(client,additionalParams, finalQueryAction,channel);
         }
         } catch (SqlParseException | SQLFeatureNotSupportedException e) {

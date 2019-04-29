@@ -48,6 +48,16 @@ public class ElasticDefaultRestExecutor implements RestExecutor {
             executor.run();
             sendDefaultResponse(executor.getHits(), channel);
         } else if (request instanceof SearchRequest) {
+            //支持preference参数
+            String preference = params.get("preference");
+            if (preference!=null && preference.length()>0)
+            {
+                preference = preference.trim();
+                if(preference.length()>0)
+                {
+                    ((SearchRequest) request).preference(preference);
+                }
+            }
             client.search((SearchRequest) request, new RestStatusToXContentListener<>(channel));
         } else if (request instanceof DeleteByQueryRequest) {
             requestBuilder.getBuilder().execute(new BulkIndexByScrollResponseContentListener(channel, Maps.newHashMap()));
@@ -75,6 +85,16 @@ public class ElasticDefaultRestExecutor implements RestExecutor {
             executor.run();
             return ElasticUtils.hitsAsStringResult(executor.getHits(), new MetaSearchResult());
         } else if (request instanceof SearchRequest) {
+            //支持preference参数
+            String preference = params.get("preference");
+            if (preference!=null && preference.length()>0)
+            {
+                preference = preference.trim();
+                if(preference.length()>0)
+                {
+                    ((SearchRequest) request).preference(preference);
+                }
+            }
             ActionFuture<SearchResponse> future = client.search((SearchRequest) request);
             SearchResponse response = future.actionGet();
             return response.toString();

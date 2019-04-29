@@ -49,7 +49,7 @@ public class AggMaker {
 
     private Map<String, KVValue> groupMap = new HashMap<>();
 
-    /**extended_bounds
+    /**
      * 分组查的聚合函数
      *
      * @param field
